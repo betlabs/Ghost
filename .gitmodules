@@ -4,3 +4,6 @@
 [submodule "core/client"]
 	path = core/client
 	url = https://github.com/TryGhost/Ghost-Admin.git
+[submodule "content/themes/betlabs-theme"]
+	path = content/themes/betlabs-theme
+	url = git://github.com/betlabs/betlabs-theme
