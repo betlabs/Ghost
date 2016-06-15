@@ -13,8 +13,11 @@ var api         = require('../../api'),
     postLookup     = require('./post-lookup'),
     setResponseContext = require('./context'),
     setRequestIsSecure = require('./secure'),
+    TelegramBot = require('node-telegram-bot-api'),
 
     frontendControllers;
+
+var bot = new TelegramBot(process.env.TELEGRAM_TOKEN);
 
 /*
 * Sets the response context around a post and renders it
@@ -86,6 +89,23 @@ frontendControllers = {
             filters.doFilter('prePostsRender', post, res.locals)
                 .then(renderPost(req, res));
         }).catch(handleError(next));
+    },
+    telegram: function telegram(req, res, next) {
+        response = req.body;
+        var response_keys = Object.getOwnPropertyNames(response);
+        var proceedable_data = ["name", "email", "message"].every(function(val) { return response_keys.indexOf(val) >= 0 });
+        if (proceedable_data) {
+            var name = response["name"],
+                email = response["email"],
+                message = response["message"]
+            var telegram_message = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`;
+            bot.sendMessage(process.env.TELEGRAM_CHAT_ID, telegram_message);
+            //bot.sendMessage(-109823796, telegram_message);
+            return res.json({"response": "OK", "result": "success",});
+        } else {
+            return res.json({"response": "Do not mess with data, please", "result": "error"});
+        }
+
     }
 };
 

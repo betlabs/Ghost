@@ -34,6 +34,9 @@ frontendRoutes = function frontendRoutes() {
     // Default
     router.get('*', frontend.single);
 
+    // Send request
+    router.post('/send-request', frontend.telegram);
+
     // setup routes for internal apps
     // @TODO: refactor this to be a proper app route hook for internal & external apps
     config.internalApps.forEach(function (appName) {
